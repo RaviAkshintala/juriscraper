@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - main  # Adjust this branch as per your repository's main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@d70bba72b1f3fd22344832f00baa16ece964efeb  # v3.3.0, 2024-04-08
+
+      - name: Build Docker image
+        run: |
+          docker buildx build -t my-docker-image .
+
+      - name: Check if /src exists
+        run: |
+          docker run --rm my-docker-image ls /src || echo "/src does not exist"
+
+      - name: Run Docker image
+        run: |
+          docker run my-docker-image
